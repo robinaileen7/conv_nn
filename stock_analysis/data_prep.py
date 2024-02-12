@@ -9,6 +9,8 @@ import config
 import warnings
 warnings.filterwarnings("ignore")
 
+regenerate_pics = False
+
 class myStruct():
     pass
 
@@ -47,14 +49,16 @@ class data_yf:
         return df_dict
 
 df_dict = data_yf(myData).retFreq()
-# path = 'pics/food/'
-path = 'pics/tech/'
-if not os.path.exists(path):
-    os.makedirs(path)
-for x, y in df_dict.items():
-    plt.imshow(df_dict[x].to_numpy())
-    plt.axis('off')
-    try:
-        plt.savefig(path+ str(x) + ".jpg", bbox_inches='tight', pad_inches=0)
-    except ValueError as e:
-        print(x + ' cannot be converted to an image')
+if __name__ == "__main__":
+    path = os.getcwd()+'/pics/food/'
+    # path = os.getcwd()+'/pics/tech/'
+    if regenerate_pics:
+        if not os.path.exists(path):
+            os.makedirs(path)
+        for x, y in df_dict.items():
+            plt.imshow(df_dict[x].to_numpy())
+            plt.axis('off')
+            try:
+                plt.savefig(path+ str(x) + ".jpg", bbox_inches='tight', pad_inches=0)
+            except ValueError as e:
+                print(x + ' cannot be converted to an image')

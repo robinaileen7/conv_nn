@@ -1,5 +1,6 @@
 import cv2
 import os
+os.chdir(os.getcwd()+'/stock_analysis')
 from os.path import isfile, join
 import numpy as np
 import random
@@ -13,8 +14,10 @@ class def_class:
         self.size = 100
         self.colored = False
         self.train_test_split = 0.25
-        self.label = {'food': 0, 'tech': 1}
+        # self.label = {'food': 0, 'tech': 1}
+        self.label = {'good': 0, 'bad': 1}
     def load_pics(self):
+        print(self.label)
         pic_dict = {}
         pic_key = []
         for i in self.label:
