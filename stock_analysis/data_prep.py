@@ -35,22 +35,30 @@ class data_yf:
     
     def retFreq(self):
         df_dict = {}
+        y_dict = {}
         for i in self.ticker:
             try:
                 temp = self.extract(i)
                 df_prep = temp['Adj Close'].shift(periods=self.period)
                 df = pd.DataFrame()
                 for j in self.period[1:]:
-                    df['Ret_' + str(j)] = (df_prep['Adj Close_' + str(j)] - df_prep['Adj Close_0'])/df_prep['Adj Close_0']
-                    if df.dropna().shape==(self.df_len, self.df_len):
-                        df_dict[i] = df.dropna()
+                    try:
+                        df['Ret_' + str(j)] = (df_prep['Adj Close_0'] - df_prep['Adj Close_' + str(j)])/df_prep['Adj Close_' + str(j)]/j
+                    except Exception:
+                        pass
+                if df.dropna().shape==(self.df_len, self.df_len-1):
+                    df_dict[i] = df.dropna().iloc[:-1, :]
+                    y_dict[i] = df.dropna().iloc[-1, :]
             except:
                 pass
-        return df_dict
+        return df_dict, y_dict
 
-df_dict = data_yf(myData).retFreq()
+    
 if __name__ == "__main__":
-    path = os.getcwd()+'/pics/food/'
+    df_dict, y_dict = data_yf(myData).retFreq()
+    print(df_dict['MCD'])
+    print(y_dict['MCD'])
+    path = os.getcwd()+'/pics/'
     # path = os.getcwd()+'/pics/tech/'
     if regenerate_pics:
         if not os.path.exists(path):
