@@ -10,6 +10,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 regenerate_pics = False
+export_tk_vol = False
 
 class myStruct():
     pass
@@ -55,12 +56,20 @@ class data_yf:
 
     
 if __name__ == "__main__":
+    print(data_yf(myData).extract('MCD'))
     df_dict, y_dict = data_yf(myData).retFreq()
-    print(df_dict['MCD'])
-    print(y_dict['MCD'])
-    path = os.getcwd()+'/pics/'
-    # path = os.getcwd()+'/pics/tech/'
+    print(np.array(df_dict['MCD']))
+    #print(y_dict['MCD'])
+    #print(y_dict['MCD']['Ret_1'])
+    if export_tk_vol:
+        path = os.getcwd()+'/data/'
+        vol = []
+        for i in df_dict.keys():
+            vol.append(df_dict[i]['Ret_1'].std())
+        df = pd.DataFrame({'ticker': list(df_dict.keys()), 'vol': vol}) 
+        df.to_excel(path + 'stock_vol.xlsx')
     if regenerate_pics:
+        path = os.getcwd()+'/pics/'
         if not os.path.exists(path):
             os.makedirs(path)
         for x, y in df_dict.items():
